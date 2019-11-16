@@ -60,10 +60,25 @@ ISR (USART_RX_vect)        //interrupt if recive data
 
 ISR (USART_RX_vect)        //interrupt if recive data 
 {
-	// receive both frames
+	static uint8_t waiting_address = 1;
+	uint16_t frame;
+	
 	// TODO: use RS485_Receive()
+	frame = USART_Receive();
 	
+	if (waiting_address && (frame & 0x10))
+	{
+		// Received address frame; check address:
+		if (frame & 0x0f == own_address)
+			waiting_address = 0; // waiting for data
+	}
 	
+	else if (!waiting_address) // if waiting for a data frame
+	{
+		// TODO: logic - process data in a dedicated module
+		
+		waiting_address = 1; // Reset state
+	}
 	
 }
 

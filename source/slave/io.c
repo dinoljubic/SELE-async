@@ -24,6 +24,7 @@
 #define LED_ON_DATA		0x00
 #define LED_OFF_DATA	0xFF
 
+
 void io_init(void)
 {
 	uint8_t mask;
