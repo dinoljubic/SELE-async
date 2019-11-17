@@ -10,7 +10,7 @@ int main() {
 	uint8_t address;
 	LED_State state = OFF;
 	
-	usart_init(master);
+	RS485_init(master);
 	
 	while (1)	// Loop forever
 	{

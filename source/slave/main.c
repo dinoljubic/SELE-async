@@ -9,7 +9,7 @@ int main (void)
 	// initialize
 	io_init();
 	own_address = read_address(); // set slave address
-	usart_init(slave); 
+	RS485_init(slave); 
 	sei(); // set global interrupts
 	
 	while(1){
@@ -17,13 +17,13 @@ int main (void)
 	}
 }
 
-/* ISR with alternate version - 2nd is not tested */
+// XXX: ISR with alternate version - 2nd is not tested
 /*
 ISR (USART_RX_vect)        //interrupt if recive data 
 {
 	
 	unsigned char resh, resl;
-	static uint8_t address_match = 0;// wait for this address
+	static uint8_t address_match = 0;
 	
 	resh = UCSR0B;
 	resl = UDR0;
@@ -66,19 +66,21 @@ ISR (USART_RX_vect)        //interrupt if recive data
 	// TODO: use RS485_Receive()
 	frame = USART_Receive();
 	
-	if (waiting_address && (frame & 0x100) != 0)
+	if (waiting_address && (frame & 0x100) != 0) // If waiting for and received address frame
 	{
-		// Received address frame; check address:
 		if (frame & 0xff == own_address)
 			waiting_address = 0; // waiting for data
 	}
 	
 	else if (!waiting_address) // if waiting for a data frame
 	{
-		// TODO: logic - process data in a dedicated module
 		io_parse_command( (uint8_t) (frame&0xff) ); 
  		waiting_address = 1; // Reset state
 	}
 	
+	else // Spurious event; reset ISR behavior and wait for next address
+	{
+		waiting_address = 1; // Reset state
+	}
 }
 
