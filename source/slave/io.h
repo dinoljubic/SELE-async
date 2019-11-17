@@ -8,7 +8,7 @@ typedef enum {
 
 void io_init(void);
 uint8_t read_address (void);
-void led_set (LED_state state);
-
+void io_led_set (LED_state state);
+void io_parse_command (uint8_t data);
 
 #endif /* IO_H */

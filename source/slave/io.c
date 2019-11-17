@@ -42,10 +42,19 @@ uint8_t read_address (void)
 	return (PINC & 0x0F);
 }
 
-void led_set (LED_state state)
+void io_led_set (LED_state state)
 {
 	if (state == ON)
 		PORTB |= (uint8_t)LED_PIN;
 	else
 		PORTB &= ~(uint8_t)LED_PIN;
 }
+
+void io_parse_command (uint8_t data)
+{
+	if (data == LED_ON_DATA)
+		io_led_set(ON);
+	else if (data == LED_OFF_DATA)
+		io_led_set(OFF);
+}
+

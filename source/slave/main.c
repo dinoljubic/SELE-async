@@ -23,24 +23,24 @@ ISR (USART_RX_vect)        //interrupt if recive data
 {
 	
 	unsigned char resh, resl;
-	static uint8_t is_it_my_address = 0;// wait for this address
+	static uint8_t address_match = 0;// wait for this address
 	
 	resh = UCSR0B;
 	resl = UDR0;
 
 	resh = (resh >> 1) & 0x01;
 
-   if (is_it_my_address == 0) // Go there if slave wait for address
+   if (address_match == 0) // Go there if slave wait for address
    {
 	   	if (resh == 1)
 		{ 
 			if (resl == slave_address) // if 9th bit 0 and address == slave address
 			{
-				is_it_my_address = 1; // if it is slave address read data (point below)
+				address_match = 1; // if it is slave address read data (point below)
 			}
 		}	
    }
-   else if (is_it_my_address == 1)	// if it is slave address read data
+   else if (address_match == 1)	// if it is slave address read data
    {
 		if ((resh == 0)) // if 9th bit 0
 		{
@@ -52,7 +52,7 @@ ISR (USART_RX_vect)        //interrupt if recive data
 			{
 				led_set (OFF);	//turn on LED
 			}
-			is_it_my_address = 0; // wait for my address
+			address_match = 0; // wait for my address
 		}	
    }
 }
@@ -66,18 +66,18 @@ ISR (USART_RX_vect)        //interrupt if recive data
 	// TODO: use RS485_Receive()
 	frame = USART_Receive();
 	
-	if (waiting_address && (frame & 0x10))
+	if (waiting_address && (frame & 0x100) != 0)
 	{
 		// Received address frame; check address:
-		if (frame & 0x0f == own_address)
+		if (frame & 0xff == own_address)
 			waiting_address = 0; // waiting for data
 	}
 	
 	else if (!waiting_address) // if waiting for a data frame
 	{
 		// TODO: logic - process data in a dedicated module
-		
-		waiting_address = 1; // Reset state
+		io_parse_command( (uint8_t) (frame&0xff) ); 
+ 		waiting_address = 1; // Reset state
 	}
 	
 }
