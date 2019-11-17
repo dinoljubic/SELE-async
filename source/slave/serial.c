@@ -3,8 +3,8 @@
 
 /*	Pin definition for Driver Enable pin of the MAX485 transciever.
 	High level enables line driver (transmiting) 					*/
-// XXX: Pin is defined for port pB
-#define TXEN_N			1
+// XXX: Pin is defined for port pC
+#define TXEN_N			4
 #define TXEN_PIN		(1<<TXEN_N)
 
 #define BAUDGEN ((16000000/(16*BAUD))-1)  // Calculated divider (may under/overflow for some cases)
@@ -60,12 +60,12 @@ uint16_t USART_Receive( void )
 void RS485_init( NodeRole_t role )
 {
 	// Set or clear TXEN pin accordingly
-	DDRB |= TXEN_PIN; // Set to output
+	DDRC |= TXEN_PIN; // Set to output
 	if (role == master){
-		PORTB |= (uint8_t)TXEN_PIN;
+		PORTC |= (uint8_t)TXEN_PIN;
 	}
 	else{
-		PORTB &= ~(uint8_t)TXEN_PIN;
+		PORTC &= ~(uint8_t)TXEN_PIN;
 	}
 	usart_init(role);
 }
