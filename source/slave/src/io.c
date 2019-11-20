@@ -2,10 +2,10 @@
 #include <avr/io.h>
 
 /*	LED and DIP switch pins are defined for specific
-	IO ports; LED on pB, DIP on pC. This can be
+	IO ports; LED on pB, DIP on pB. This can be
 	generalized, but is not necessary in this context.	*/
 
-#define LED_N			0
+#define LED_N			5
 
 /*	Solution is hardcoded for these values of DIP pin #
 	For other values, modify read_address function		*/
@@ -32,14 +32,14 @@ void io_init(void)
 
 	mask = DIP0_PIN | DIP1_PIN | DIP2_PIN | DIP3_PIN;
 	
-	DDRC |= mask; // DIP buttons are inputs, needed to set slave address
-	PORTC |= mask; // pull-up DIP buttons
+	DDRB |= mask; // DIP buttons are inputs, needed to set slave address
+	PORTB |= mask; // pull-up DIP buttons
 }
 
 uint8_t read_address (void)
 {
 	// TODO: mod. for accepting other positions
-	return (PINC & 0x0F);
+	return (PINB & 0x0F);
 }
 
 void io_led_set (LED_state state)

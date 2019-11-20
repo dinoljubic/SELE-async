@@ -1,4 +1,5 @@
 #include "serial.h"
+#include "io.h"
 #include <avr/interrupt.h>
 #include <inttypes.h>
 
@@ -68,7 +69,7 @@ ISR (USART_RX_vect)        //interrupt if recive data
 	
 	if (waiting_address && (frame & 0x100) != 0) // If waiting for and received address frame
 	{
-		if (frame & 0xff == own_address)
+		if ((frame & 0xff) == own_address)
 			waiting_address = 0; // waiting for data
 	}
 	
