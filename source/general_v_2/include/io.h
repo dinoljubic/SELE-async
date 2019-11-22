@@ -16,8 +16,8 @@
 #define	DIP2_N			2
 #define	DIP3_N			3
 // TODO check if correct button pin
-#define BUT1_N  7
-#define BUT2_N  6
+#define BUT1_N  		7
+#define BUT2_N  		6
 
 /* Pin position defines - do not modify */
 #define DIP0_PIN		(1<<DIP0_N)
@@ -29,14 +29,13 @@
 #define BUT2_PIN		(1<<BUT2_N)
 
 typedef enum {
-	ON_LED = 1,
-	OFF_LED = 0
-} LED_state;
+	OFF = 0,
+	ON = 1
+} PinState_t;
 
 void io_init(void);
 uint8_t read_address (void);
-void io_led_set (LED_state state);
-void io_parse_command (uint8_t data);
-uint8_t io_read_buttons(void);
+void io_led_set (PinState_t state);
+uint8_t io_read_button(uint8_t pin);
 
 #endif /* IO_H */

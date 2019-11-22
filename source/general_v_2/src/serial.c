@@ -1,5 +1,6 @@
 #include "serial.h"
 #include <avr/io.h>
+#include "slave_handles.h"
 
 /*	Pin definition for Driver Enable pin of the MAX485 transciever.
 	High level enables line driver (transmiting) 					*/
@@ -8,6 +9,8 @@
 #define WREN_PIN		(1<<WREN_N)
 
 #define BAUDGEN ((16000000/(16*BAUD))-1)  // Calculated divider (may under/overflow for some cases)
+
+extern uint8_t own_address;
 
 void usart_init(NodeRole_t role) 
 {
@@ -76,8 +79,33 @@ void RS485_Transmit( uint16_t data )
 	USART_Transmit( data );
 }
 
+// FFU
 uint16_t RS485_Receive( void )
 {
 	return USART_Receive(  );
+}
+
+
+ISR (USART_RX_vect)        //interrupt if recive data 
+{
+	uint16_t frame;
+
+	frame = USART_Receive();
+		
+	if ((frame & 0x100) != 0) // If received an address frame
+	{
+			if ((frame & 0xff) == own_address)
+			{
+				UCSR0A &= ~(1 << MPCM0); //turn off Multiprocessor mode
+			}
+			else 
+			{
+				UCSR0A |= (1 << MPCM0); //turn on Multiprocessor mode
+			}
+	}
+	else // Received a data frame
+	{
+		Slave_ParseCommand( (uint8_t) (frame&0xff) ); 
+	}
 }
 

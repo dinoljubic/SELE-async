@@ -4,7 +4,7 @@
 #define LED_ON_DATA		0x00
 #define LED_OFF_DATA	0xFF
 
-void Slave_SetLED (LED_State_t state)
+void Slave_SetLED (uint8_t address, PinState_t state)
 {
 	uint8_t led_data;
 
@@ -17,18 +17,23 @@ void Slave_SetLED (LED_State_t state)
 		break;
 	}
 	
-	Slave_Send_Data(led_data);
+	Slave_Send(address, led_data);
 }
 
-void Slave_Send_Data (uint8_t data)
-{
+void Slave_Send (uint8_t address, uint8_t data)
+{	
+	// transmit address frame
+	RS485_Transmit((1 << 8) | address);
 	// transmit data frame
 	RS485_Transmit((0 << 8) | data);
 }
 
-void Slave_Send_Address (uint8_t address)
+// TODO : this function shouldn't be in io - find better place
+void Slave_ParseCommand (uint8_t data)
 {
-	// transmit address frame
-	RS485_Transmit((1 << 8) | address);
-} 
+	if (data == LED_ON_DATA)
+		io_led_set(ON);
+	else if (data == LED_OFF_DATA)
+		io_led_set(OFF);
+}
 

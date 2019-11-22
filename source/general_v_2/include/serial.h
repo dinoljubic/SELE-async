@@ -2,6 +2,7 @@
 #define SERIAL_H
 
 #include <avr/io.h>
+#include <avr/interrupt.h>
 
 #define	BAUD 57600                   // Desired baud rate
 
