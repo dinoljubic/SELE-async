@@ -23,6 +23,7 @@ void Slave_SetLED (uint8_t address, PinState_t state)
 void Slave_Send (uint8_t address, uint8_t data)
 {	
 	// transmit address frame
+	//TODO: do not transmit address if it is the same as last transmission
 	RS485_Transmit((1 << 8) | address);
 	// transmit data frame
 	RS485_Transmit((0 << 8) | data);

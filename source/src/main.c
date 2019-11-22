@@ -1,6 +1,6 @@
 #include "slave_handles.h"
 #include "serial.h"
-//#include "avr/delay.h"
+#include "avr/delay.h"
 #include "io.h"
 
 #define MASTER_ADDR 15
@@ -17,6 +17,7 @@ int main() {
 
 	if (own_address == MASTER_ADDR)
 	{
+		
 		RS485_init(master);
 		//mainMaster();
 		SlaveDevice_t devices[2] = {{SLAVE1_ADDR, OFF, BUT1_PIN}, {SLAVE2_ADDR, OFF, BUT2_PIN}};

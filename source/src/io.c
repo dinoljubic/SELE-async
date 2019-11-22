@@ -32,7 +32,10 @@ void io_led_set (PinState_t state)
 
 uint8_t io_read_button(uint8_t pin)
 {
-	return (PINB & pin)!=0;
+	if ((PIND & pin) != 0)
+		return 0;
+	else
+		return 1;
 }
 
 

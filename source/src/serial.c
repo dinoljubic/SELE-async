@@ -17,7 +17,7 @@ void usart_init(NodeRole_t role)
 	if (role == master){
 		// Master enables only transmit
 		UBRR0 = BAUDGEN;
-		UCSR0A = (1 << MPCM0);
+		//UCSR0A = (1 << MPCM0);
 		UCSR0B = (1 << TXEN0) | (1 << UCSZ02); // enable  transmit
 		UCSR0C = (1 << UCSZ00) | (1 << UCSZ01);// 2 stop bits USBS0, 9 bit mode  UCSZ0
 	}
