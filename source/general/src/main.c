@@ -20,8 +20,8 @@ uint8_t BUT2_prev;
 #define COMMAND_ON  0b10000000
 #define COMMAND_OFF 0b01000000
 
-#define MASTER_MODE
-//#define SLAVE_MODE
+//#define MASTER_MODE
+#define SLAVE_MODE
 
 void asynch9_init(long BAUD) 
 {
@@ -88,14 +88,13 @@ ISR (USART_RX_vect)        //interrupt if recive data
 	uint16_t frame;
 
 	frame = get_data();
-
-	send_data(frame);
 		
 	if ((frame & 0x100) != 0) // If waiting for and received address frame
 	{
-			if (((uint8_t)(frame)) == ADDR)
+			if ((frame & 0xff) == SLAVE2_ADDR)
 			{
 				// never reach this line
+				digitalWrite (LED_PIN,HIGH);
 				UCSR0A &= ~(1 << MPCM0); //turn off Multiprocessor mode
 			}
 			else 
@@ -105,11 +104,11 @@ ISR (USART_RX_vect)        //interrupt if recive data
 	}
 	else // wait for a data frame
 	{
-		if ((uint8_t)(frame) == COMMAND_ON)
+		if ((frame & 0xff) == COMMAND_ON)
 		{
 			digitalWrite (LED_PIN,HIGH);
 		}
-		else if ((uint8_t)(frame) == COMMAND_OFF)
+		else if ((frame & 0xff) == COMMAND_OFF)
 		{
 			digitalWrite (LED_PIN,LOW);
 		}
@@ -145,7 +144,7 @@ void setup()
 	
 #endif /* SLAVE_MODE */
 
-  asynch9_init(115200);
+  asynch9_init(57600);
     
 }
 
