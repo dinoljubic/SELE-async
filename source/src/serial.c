@@ -11,6 +11,7 @@
 #define BAUDGEN ((16000000/(16*BAUD))-1)  // Calculated divider (may under/overflow for some cases)
 
 extern uint8_t own_address;
+uint8_t last_addressed;
 
 void usart_init(NodeRole_t role) 
 {
@@ -30,6 +31,7 @@ void usart_init(NodeRole_t role)
 	}
 }
 
+
 void USART_Transmit(uint16_t data)
 {
 	/* Wait for empty transmit buffer */
@@ -41,6 +43,7 @@ void USART_Transmit(uint16_t data)
 	/* Put data into buffer, sends the data */
 	UDR0 = data;
 }
+
 
 uint16_t USART_Receive( void )
 {
@@ -67,6 +70,7 @@ void RS485_init( NodeRole_t role )
 	DDRD |= WREN_PIN; // Set to output
 	if (role == master){
 		PORTD |= (uint8_t)WREN_PIN;
+		last_addressed = 0xff;
 	}
 	else{
 		PORTD &= ~(uint8_t)WREN_PIN;
@@ -74,10 +78,22 @@ void RS485_init( NodeRole_t role )
 	usart_init(role);
 }
 
-void RS485_Transmit( uint16_t data )
+
+void RS485_Transmit( uint8_t address, uint8_t data )
 {
-	USART_Transmit( data );
+	// If node was previously addressed, send only data.
+	if (address == last_addressed)
+		USART_Transmit( data );
+	else
+	{
+		// Otherwise, send both address and data frame
+		USART_Transmit((1 << 8) | address ); // Address frame
+		USART_Transmit((0 << 8) | data ); // Data frame
+		last_addressed = address;
+	}
+	
 }
+
 
 // FFU
 uint16_t RS485_Receive( void )

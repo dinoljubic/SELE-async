@@ -50,8 +50,8 @@ int main() {
 	return 0;
 }
 
+/*
 void mainMaster(){
-	/*
 	uint8_t BUTTON_STATE = 0,BUTTON_STATE_PREV = 0;
 	
 	while (1)
@@ -81,7 +81,6 @@ void mainMaster(){
 
 	BUTTON_STATE_PREV = BUTTON_STATE;
 	}
-	*/
 }
-
+*/
 

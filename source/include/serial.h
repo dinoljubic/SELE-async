@@ -16,7 +16,7 @@ void USART_Transmit(uint16_t data);
 uint16_t USART_Receive( void );
 
 void RS485_init( NodeRole_t role );
-void RS485_Transmit( uint16_t data );
+void RS485_Transmit( uint8_t address, uint8_t data );
 uint16_t RS485_Receive( void );
 
 
