@@ -4,7 +4,7 @@
 #include <avr/io.h>
 #include <avr/interrupt.h>
 
-#define	BAUD 57600                   // Desired baud rate
+#define	BAUD 9600                   // Desired baud rate
 
 typedef enum {
 	master, // master transmits only

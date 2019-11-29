@@ -15,7 +15,7 @@
 #define	DIP1_N			1
 #define	DIP2_N			2
 #define	DIP3_N			3
-// TODO check if correct button pin
+
 #define BUT1_N  		7
 #define BUT2_N  		6
 

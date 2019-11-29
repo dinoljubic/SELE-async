@@ -1,5 +1,6 @@
 #include "serial.h"
 #include <avr/io.h>
+#include <util/delay.h>
 #include "slave_handles.h"
 
 /*	Pin definition for Driver Enable pin of the MAX485 transciever.
@@ -8,7 +9,8 @@
 #define WREN_N			2
 #define WREN_PIN		(1<<WREN_N)
 
-#define BAUDGEN ((16000000/(16*BAUD))-1)  // Calculated divider (may under/overflow for some cases)
+//#define BAUDGEN ((16000000/(16*BAUD))-1)  // Calculated divider (overflows - precalculated)
+#define BAUDGEN 103
 
 extern uint8_t own_address;
 uint8_t last_addressed;
@@ -18,9 +20,11 @@ void usart_init(NodeRole_t role)
 	if (role == master){
 		// Master enables only transmit
 		UBRR0 = BAUDGEN;
+		//UBRR0H = (uint8_t)(BAUDGEN >> 8);
+		//UBRR0L = (uint8_t)(BAUDGEN&0xff);
 		//UCSR0A = (1 << MPCM0);
 		UCSR0B = (1 << TXEN0) | (1 << UCSZ02); // enable  transmit
-		UCSR0C = (1 << UCSZ00) | (1 << UCSZ01);// 2 stop bits USBS0, 9 bit mode  UCSZ0
+		UCSR0C = (1 << UCSZ00) | (1 << UCSZ01);// 1 stop bits USBS0, 9 bit mode  UCSZ0
 	}
 	else {
 		// Slave enables only Rx (with interrupt)
@@ -107,7 +111,7 @@ ISR (USART_RX_vect)        //interrupt if recive data
 	uint16_t frame;
 
 	frame = USART_Receive();
-		
+
 	if ((frame & 0x100) != 0) // If received an address frame
 	{
 			if ((frame & 0xff) == own_address)
