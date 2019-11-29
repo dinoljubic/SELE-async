@@ -29,3 +29,10 @@ Parsing of the data frame messages is done in the last module.
 **slave_handles.c**<br/>
 Module for implementing functionality requested in the lab assignment. On the master side, it uses the function *Slave_SetLED* to assert the LED. Slave uses the function *Slave_ParseCommand*.
 
+## Analyzer captures
+Images below show the transmission of command (0x00) to turn on the LED to for both devices (MSB is the address/data frame indicator):<br/>
+![alt-text](https://github.com/dinoljubic/SELE-async/blob/master/img/Capturar1.PNG "0x10E, 0x000" )
+![alt-text](https://github.com/dinoljubic/SELE-async/blob/master/img/Capturar2.PNG "0x10D, 0x000" )
+On fast release of the button, the same deice is issued a command to turn off but, again, without the address frame. First image below shows this feature, while the second image shows an adittional transmission to the same device.<br/>
+![alt-text](https://github.com/dinoljubic/SELE-async/blob/master/img/Capturar5_mk.PNG "0x10E, 0x000", 0x0FF" )
+![alt-text](https://github.com/dinoljubic/SELE-async/blob/master/img/Capturar6_mk.PNG "0x000", 0x0FF" )
