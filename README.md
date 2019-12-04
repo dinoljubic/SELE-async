@@ -5,7 +5,10 @@ Asynchronous Communication System project for laboratory exercises of Electronic
 Brief explanation of implemented solution to the task given at the laboratory excercises. Firstly, an overview is given, followed by detailed explanation of each module. Functionality of each file included in source (src) folder of this repository is explained below. 
 
 Generally, the system consists of three Arduino UNO boards connected to a common RS485 bus using the internal USART peripheral and a dedicated transceiver. Two of the boards will act as slave devices with the third being a master. Role of the master is to read the state of the buttons connected to the board's IO pins and control internal LEDs on the slave boards accordingly. 
-Devices are identified with addresses assigned to them by setting state of 4 DIP switches to the wanted binary value. 
+Devices are identified with addresses assigned to them by setting state of 4 DIP switches to the wanted binary value.
+
+## Board design
+On link: https://easyeda.com/diljubic/sele_async
 
 ## System description
 
